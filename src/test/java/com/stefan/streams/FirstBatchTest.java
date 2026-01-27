@@ -24,7 +24,7 @@ public class FirstBatchTest {
     void shouldFilterProductsAndCollectStrings() {
 
         List<Product> products = getAllProducts();
-        List<String> result = firstBatch.filteringAndCollecting(products);
+        List<String> result = firstBatch.getElectronicsProductNames(products);
 
         List<String> response = List.of("iPhone 14", "MacBook Pro", "Wireless Earbuds", "Smart Watch");
         Assertions.assertEquals(response, result);
@@ -34,7 +34,7 @@ public class FirstBatchTest {
     void shouldFindFirstSportswearProductUnder20Dollars() {
 
         List<Product> products = getAllProducts();
-        Product result = firstBatch.findingElements(products);
+        Product result = firstBatch.findAffordableSportswearProduct(products);
 
         Product expectedProduct = new Product("P6", "Water Bottle", "Sportswear", new BigDecimal("12.99"));
         Assertions.assertEquals(expectedProduct, result);
@@ -44,7 +44,7 @@ public class FirstBatchTest {
     void shouldTransformOrdersToOrderSummaries() {
 
         List<Order> orders = getAllOrders();
-        List<?> result = firstBatch.transformingElementsInAStream(orders);
+        List<?> result = firstBatch.mapOrdersToSummaries(orders);
 
         Assertions.assertEquals(8, result.size());
         // Further assertions can be added here to validate the content of the order summaries
@@ -54,7 +54,7 @@ public class FirstBatchTest {
     void shouldSortProductsByPrice() {
 
         List<Product> products = getAllProducts();
-        List<Product> result = firstBatch.sortingElements(products);
+        List<Product> result = firstBatch.sortProductsByPrice(products);
 
         Assertions.assertEquals(10, result.size());
         Assertions.assertEquals("Water Bottle", result.get(0).name());
@@ -68,7 +68,7 @@ public class FirstBatchTest {
         int pageNumber = 1; // 0-based index, so this is the second page
         List<Product> products = getAllProducts();
 
-        List<Product> result = firstBatch.limitingAnSkipping(products, pageSize, pageNumber);
+        List<Product> result = firstBatch.getProductsPage(products, pageSize, pageNumber);
 
         Assertions.assertEquals(3, result.size());
         Assertions.assertEquals("Running Shoes", result.get(0).name());
@@ -80,7 +80,7 @@ public class FirstBatchTest {
     void shouldFlattenNestedCollectionsOfOrderedProducts() {
 
         List<Order> orders = getAllOrders();
-        List<Product> result = firstBatch.fatteningNestedCollections(orders);
+        List<Product> result = firstBatch.extractAllOrderedProducts(orders);
 
         Assertions.assertEquals(10, result.size());
         // Further assertions can be added here to validate the content of the products list
@@ -90,7 +90,7 @@ public class FirstBatchTest {
     void shouldReduceOrdersToTotalRevenue() {
 
         List<Order> orders = getAllOrders();
-        double result = firstBatch.reducingElements(orders);
+        double result = firstBatch.calculateTotalRevenue(orders);
 
         double expectedTotalRevenue = 999.99 + 349.99 + 1999.99 + 89.99 + 34.99 * 2 + 129.99 + 25.99 + 12.99 * 2 + 159.99 + 79.99 + 34.99 + 999.99 + 1999.99 + 349.99;
         Assertions.assertEquals(expectedTotalRevenue, result, 0.01);
@@ -100,7 +100,7 @@ public class FirstBatchTest {
     void shouldShortCircuitOperationsOnProducts() {
 
         List<Product> products = getAllProducts();
-        Product result = firstBatch.ShortCircuitingOperations(products);
+        Product result = firstBatch.findExpensiveElectronicsProduct(products);
 
         Product expectedProduct = new Product("P2", "MacBook Pro", "Electronics", new BigDecimal("1999.99"));
         Assertions.assertEquals(expectedProduct, result);
@@ -110,7 +110,7 @@ public class FirstBatchTest {
     void shouldJoinProductCategoriesIntoString() {
 
         List<Product> products = getAllProducts();
-        String result = firstBatch.joiningStrings(products);
+        String result = firstBatch.joinProductCategories(products);
 
         List<String> expectedCategoryNames = List.of("Electronics", "Appliances", "Sportswear", "Home");
         expectedCategoryNames.forEach(c ->
@@ -121,7 +121,7 @@ public class FirstBatchTest {
     void shouldCollectProductNamesToUnmodifiableList() {
 
         List<Product> products = getAllProducts();
-        List<String> result = firstBatch.collectingToUnmodifiableCollection(products);
+        List<String> result = firstBatch.collectProductNamesToUnmodifiableList(products);
 
         List<String> expectedNames = products.stream().map(Product::name).toList();
         Assertions.assertEquals(expectedNames, result);
@@ -133,7 +133,7 @@ public class FirstBatchTest {
     @Test
     void shouldCollectProductCategoriesToSet() {
         List<Product> products = getAllProducts();
-        Set<String> result = firstBatch.collectingToASetDirectly(products);
+        Set<String> result = firstBatch.collectCategoriesToSet(products);
 
         // The expected unique categories from getAllProducts()
         List<String> expectedCategories = List.of("Electronics", "Appliances", "Sportswear", "Home");
@@ -145,7 +145,7 @@ public class FirstBatchTest {
     @Test
     void shouldCollectProductNamesToMap() {
         List<Product> products = getAllProducts();
-        var result = firstBatch.collectingToMap(products);
+        var result = firstBatch.mapProductNamesToPrices(products);
 
         Assertions.assertEquals(products.size(), result.size());
         for (Product product : products) {
@@ -164,7 +164,7 @@ public class FirstBatchTest {
     @Test
     void shouldGroupProductNamesByCategoryWithPriceOver100() {
         List<Product> products = getAllProducts();
-        Map<String, List<String>> result = firstBatch.filteringAndMappingInCollectors(products);
+        Map<String, List<String>> result = firstBatch.groupExpensiveProductNamesByCategory(products);
 
         Map<String, List<String>> expected = Map.of(
                 "Electronics", List.of("iPhone 14", "MacBook Pro", "Wireless Earbuds", "Smart Watch"),
@@ -179,7 +179,7 @@ public class FirstBatchTest {
     @Test
     void shouldHandleDuplicateKeysWhenCollectingToMap() {
         List<Product> products = getAllProducts();
-        Map<BigDecimal, String> result = firstBatch.handlingDuplicateKeysIntoMap(products);
+        Map<BigDecimal, String> result = firstBatch.mapPricesToMergedProductNames(products);
 
         // Since there are no duplicate prices in the provided products, the size should match
         Assertions.assertEquals(products.size(), result.size());
@@ -221,7 +221,7 @@ public class FirstBatchTest {
     @Test
     void shouldPartitionProductsByPriceThreshold() {
         List<Product> products = getAllProducts();
-        Map<Boolean, List<Product>> result = firstBatch.partitioningData(products);
+        Map<Boolean, List<Product>> result = firstBatch.partitionProductsByPrice(products);
 
         Assertions.assertEquals(5, result.get(true).size()); // Products over 100
         Assertions.assertEquals(5, result.get(false).size()); // Products 100 or below
@@ -230,7 +230,7 @@ public class FirstBatchTest {
     @Test
     void shouldGroupProductsByCategory() {
         List<Product> products = getAllProducts();
-        Map<String, List<Product>> result = firstBatch.groupingData(products);
+        Map<String, List<Product>> result = firstBatch.groupProductsByCategory(products);
 
         Assertions.assertEquals(4, result.size());
         Assertions.assertEquals(4, result.get("Electronics").size());
@@ -242,7 +242,7 @@ public class FirstBatchTest {
     @Test
     void shouldChainCollectorsToGetAveragePriceByCategory() {
         List<Product> products = getAllProducts();
-        Map<String, Double> result = firstBatch.chainingCollectors(products);
+        Map<String, Double> result = firstBatch.calculateAveragePriceByCategory(products);
 
         Assertions.assertEquals(877.49, result.get("Electronics"), 0.000001);
         Assertions.assertEquals(84.99, result.get("Appliances"), 0.000001);
@@ -253,7 +253,7 @@ public class FirstBatchTest {
     @Test
     void shouldGroupOrdersByCustomerTierAndStatusWithStats() {
         List<Order> orders = getAllOrders();
-        Map<String, Map<String, OrderStats>> result = firstBatch.usingCollectingAndThen(orders);
+        Map<String, Map<String, OrderStats>> result = firstBatch.analyzeOrdersByCustomerTierAndStatus(orders);
 
         // Verify the structure has 3 tiers: elite, premium, standard
         Assertions.assertEquals(3, result.size());
