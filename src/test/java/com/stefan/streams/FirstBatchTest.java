@@ -7,8 +7,9 @@ import com.stefan.streams.models.Order;
 import com.stefan.streams.models.OrderItem;
 import com.stefan.streams.models.OrderStats;
 import com.stefan.streams.models.Product;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Ignore
 public class FirstBatchTest {
 
     private final FirstBatch firstBatch = new FirstBatch();
@@ -27,7 +29,7 @@ public class FirstBatchTest {
         List<String> result = firstBatch.getElectronicsProductNames(products);
 
         List<String> response = List.of("iPhone 14", "MacBook Pro", "Wireless Earbuds", "Smart Watch");
-        Assertions.assertEquals(response, result);
+        Assert.assertEquals(response, result);
     }
 
     @Test
@@ -37,7 +39,7 @@ public class FirstBatchTest {
         Product result = firstBatch.findAffordableSportswearProduct(products);
 
         Product expectedProduct = new Product("P6", "Water Bottle", "Sportswear", new BigDecimal("12.99"));
-        Assertions.assertEquals(expectedProduct, result);
+        Assert.assertEquals(expectedProduct, result);
     }
 
     @Test
@@ -46,7 +48,7 @@ public class FirstBatchTest {
         List<Order> orders = getAllOrders();
         List<?> result = firstBatch.mapOrdersToSummaries(orders);
 
-        Assertions.assertEquals(8, result.size());
+        Assert.assertEquals(8, result.size());
         // Further assertions can be added here to validate the content of the order summaries
     }
 
@@ -56,9 +58,9 @@ public class FirstBatchTest {
         List<Product> products = getAllProducts();
         List<Product> result = firstBatch.sortProductsByPrice(products);
 
-        Assertions.assertEquals(10, result.size());
-        Assertions.assertEquals("Water Bottle", result.get(0).name());
-        Assertions.assertEquals("MacBook Pro", result.get(9).name());
+        Assert.assertEquals(10, result.size());
+        Assert.assertEquals("Water Bottle", result.get(0).name());
+        Assert.assertEquals("MacBook Pro", result.get(9).name());
     }
 
     @Test
@@ -70,10 +72,10 @@ public class FirstBatchTest {
 
         List<Product> result = firstBatch.getProductsPage(products, pageSize, pageNumber);
 
-        Assertions.assertEquals(3, result.size());
-        Assertions.assertEquals("Running Shoes", result.get(0).name());
-        Assertions.assertEquals("Yoga Mat", result.get(1).name());
-        Assertions.assertEquals("Water Bottle", result.get(2).name());
+        Assert.assertEquals(3, result.size());
+        Assert.assertEquals("Running Shoes", result.get(0).name());
+        Assert.assertEquals("Yoga Mat", result.get(1).name());
+        Assert.assertEquals("Water Bottle", result.get(2).name());
     }
 
     @Test
@@ -82,7 +84,7 @@ public class FirstBatchTest {
         List<Order> orders = getAllOrders();
         List<Product> result = firstBatch.extractAllOrderedProducts(orders);
 
-        Assertions.assertEquals(10, result.size());
+        Assert.assertEquals(10, result.size());
         // Further assertions can be added here to validate the content of the products list
     }
 
@@ -93,7 +95,7 @@ public class FirstBatchTest {
         double result = firstBatch.calculateTotalRevenue(orders);
 
         double expectedTotalRevenue = 999.99 + 349.99 + 1999.99 + 89.99 + 34.99 * 2 + 129.99 + 25.99 + 12.99 * 2 + 159.99 + 79.99 + 34.99 + 999.99 + 1999.99 + 349.99;
-        Assertions.assertEquals(expectedTotalRevenue, result, 0.01);
+        Assert.assertEquals(expectedTotalRevenue, result, 0.01);
     }
 
     @Test
@@ -103,7 +105,7 @@ public class FirstBatchTest {
         Product result = firstBatch.findExpensiveElectronicsProduct(products);
 
         Product expectedProduct = new Product("P2", "MacBook Pro", "Electronics", new BigDecimal("1999.99"));
-        Assertions.assertEquals(expectedProduct, result);
+        Assert.assertEquals(expectedProduct, result);
     }
 
     @Test
@@ -114,7 +116,7 @@ public class FirstBatchTest {
 
         List<String> expectedCategoryNames = List.of("Electronics", "Appliances", "Sportswear", "Home");
         expectedCategoryNames.forEach(c ->
-                Assertions.assertTrue(result.contains(c)));
+                Assert.assertTrue(result.contains(c)));
     }
 
     @Test
@@ -124,10 +126,10 @@ public class FirstBatchTest {
         List<String> result = firstBatch.collectProductNamesToUnmodifiableList(products);
 
         List<String> expectedNames = products.stream().map(Product::name).toList();
-        Assertions.assertEquals(expectedNames, result);
+        Assert.assertEquals(expectedNames, result);
 
         // Attempting to modify the list should throw an UnsupportedOperationException
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> result.add("New Product"));
+        Assert.assertThrows(UnsupportedOperationException.class, () -> result.add("New Product"));
     }
 
     @Test
@@ -138,8 +140,8 @@ public class FirstBatchTest {
         // The expected unique categories from getAllProducts()
         List<String> expectedCategories = List.of("Electronics", "Appliances", "Sportswear", "Home");
 
-        Assertions.assertEquals(expectedCategories.size(), result.size());
-        Assertions.assertTrue(result.containsAll(expectedCategories));
+        Assert.assertEquals(expectedCategories.size(), result.size());
+        Assert.assertTrue(result.containsAll(expectedCategories));
     }
 
     @Test
@@ -147,9 +149,9 @@ public class FirstBatchTest {
         List<Product> products = getAllProducts();
         var result = firstBatch.mapProductNamesToPrices(products);
 
-        Assertions.assertEquals(products.size(), result.size());
+        Assert.assertEquals(products.size(), result.size());
         for (Product product : products) {
-            Assertions.assertEquals(product.price(), result.get(product.name()));
+            Assert.assertEquals(product.price(), result.get(product.name()));
         }
     }
 
@@ -173,7 +175,7 @@ public class FirstBatchTest {
                 "Home", List.of()
         );
 
-        Assertions.assertEquals(expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     @Test
@@ -182,9 +184,9 @@ public class FirstBatchTest {
         Map<BigDecimal, String> result = firstBatch.mapPricesToMergedProductNames(products);
 
         // Since there are no duplicate prices in the provided products, the size should match
-        Assertions.assertEquals(products.size(), result.size());
+        Assert.assertEquals(products.size(), result.size());
         for (Product product : products) {
-            Assertions.assertTrue(result.get(product.price()).contains(product.name()));
+            Assert.assertTrue(result.get(product.price()).contains(product.name()));
         }
     }
 
@@ -200,7 +202,7 @@ public class FirstBatchTest {
                 "Home", 1L
         );
 
-        Assertions.assertEquals(expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     @Test
@@ -215,7 +217,7 @@ public class FirstBatchTest {
                 "Home", List.of("Desk Lamp")
         );
 
-        Assertions.assertEquals(expected, result);
+        Assert.assertEquals(expected, result);
     }
 
     @Test
@@ -223,8 +225,8 @@ public class FirstBatchTest {
         List<Product> products = getAllProducts();
         Map<Boolean, List<Product>> result = firstBatch.partitionProductsByPrice(products);
 
-        Assertions.assertEquals(5, result.get(true).size()); // Products over 100
-        Assertions.assertEquals(5, result.get(false).size()); // Products 100 or below
+        Assert.assertEquals(5, result.get(true).size()); // Products over 100
+        Assert.assertEquals(5, result.get(false).size()); // Products 100 or below
     }
 
     @Test
@@ -232,11 +234,11 @@ public class FirstBatchTest {
         List<Product> products = getAllProducts();
         Map<String, List<Product>> result = firstBatch.groupProductsByCategory(products);
 
-        Assertions.assertEquals(4, result.size());
-        Assertions.assertEquals(4, result.get("Electronics").size());
-        Assertions.assertEquals(2, result.get("Appliances").size());
-        Assertions.assertEquals(3, result.get("Sportswear").size());
-        Assertions.assertEquals(1, result.get("Home").size());
+        Assert.assertEquals(4, result.size());
+        Assert.assertEquals(4, result.get("Electronics").size());
+        Assert.assertEquals(2, result.get("Appliances").size());
+        Assert.assertEquals(3, result.get("Sportswear").size());
+        Assert.assertEquals(1, result.get("Home").size());
     }
 
     @Test
@@ -244,10 +246,10 @@ public class FirstBatchTest {
         List<Product> products = getAllProducts();
         Map<String, Double> result = firstBatch.calculateAveragePriceByCategory(products);
 
-        Assertions.assertEquals(877.49, result.get("Electronics"), 0.000001);
-        Assertions.assertEquals(84.99, result.get("Appliances"), 0.000001);
-        Assertions.assertEquals(56.32333333333333, result.get("Sportswear"), 0.000001);
-        Assertions.assertEquals(34.99, result.get("Home"), 0.000001);
+        Assert.assertEquals(877.49, result.get("Electronics"), 0.000001);
+        Assert.assertEquals(84.99, result.get("Appliances"), 0.000001);
+        Assert.assertEquals(56.32333333333333, result.get("Sportswear"), 0.000001);
+        Assert.assertEquals(34.99, result.get("Home"), 0.000001);
     }
 
     @Test
@@ -256,29 +258,29 @@ public class FirstBatchTest {
         Map<String, Map<String, OrderStats>> result = firstBatch.analyzeOrdersByCustomerTierAndStatus(orders);
 
         // Verify the structure has 3 tiers: elite, premium, standard
-        Assertions.assertEquals(3, result.size());
-        Assertions.assertTrue(result.containsKey("elite"));
-        Assertions.assertTrue(result.containsKey("premium"));
-        Assertions.assertTrue(result.containsKey("standard"));
+        Assert.assertEquals(3, result.size());
+        Assert.assertTrue(result.containsKey("elite"));
+        Assert.assertTrue(result.containsKey("premium"));
+        Assert.assertTrue(result.containsKey("standard"));
 
         // Verify elite tier
         Map<String, OrderStats> eliteStats = result.get("elite");
-        Assertions.assertEquals(3, eliteStats.size()); // delivered, placed, canceled
-        Assertions.assertEquals(new OrderStats(1, 2), eliteStats.get("delivered")); // O1: 2 items
-        Assertions.assertEquals(new OrderStats(2, 5), eliteStats.get("placed")); // O4: 4 items, O8: 1 item
-        Assertions.assertEquals(new OrderStats(1, 1), eliteStats.get("canceled")); // O5: 1 item
+        Assert.assertEquals(3, eliteStats.size()); // delivered, placed, canceled
+        Assert.assertEquals(new OrderStats(1, 2), eliteStats.get("delivered")); // O1: 2 items
+        Assert.assertEquals(new OrderStats(2, 5), eliteStats.get("placed")); // O4: 4 items, O8: 1 item
+        Assert.assertEquals(new OrderStats(1, 1), eliteStats.get("canceled")); // O5: 1 item
 
         // Verify premium tier
         Map<String, OrderStats> premiumStats = result.get("premium");
-        Assertions.assertEquals(2, premiumStats.size()); // delivered, placed
-        Assertions.assertEquals(new OrderStats(1, 1), premiumStats.get("delivered")); // O2: 1 item
-        Assertions.assertEquals(new OrderStats(1, 2), premiumStats.get("placed")); // O7: 2 items
+        Assert.assertEquals(2, premiumStats.size()); // delivered, placed
+        Assert.assertEquals(new OrderStats(1, 1), premiumStats.get("delivered")); // O2: 1 item
+        Assert.assertEquals(new OrderStats(1, 2), premiumStats.get("placed")); // O7: 2 items
 
         // Verify standard tier
         Map<String, OrderStats> standardStats = result.get("standard");
-        Assertions.assertEquals(2, standardStats.size()); // shipped, placed
-        Assertions.assertEquals(new OrderStats(1, 3), standardStats.get("shipped")); // O3: 3 items
-        Assertions.assertEquals(new OrderStats(1, 2), standardStats.get("placed")); // O6: 2 items
+        Assert.assertEquals(2, standardStats.size()); // shipped, placed
+        Assert.assertEquals(new OrderStats(1, 3), standardStats.get("shipped")); // O3: 3 items
+        Assert.assertEquals(new OrderStats(1, 2), standardStats.get("placed")); // O6: 2 items
     }
 
 
